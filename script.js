@@ -1,4 +1,11 @@
-let transactions = [];
+console.log("Smart Expense Manager JS Loaded!");
+
+let transactions = JSON.parse(
+    localStorage.getItem('transactions') || '[]'
+);
+if (!Array.isArray(transactions)) {
+    transactions = [];
+}
 
 //2.select html elements
 
@@ -11,6 +18,8 @@ const incomeElement=document.getElementById('income');
 const expenseElement=document.getElementById('expense');
 
 const transactionList=document.getElementById('transaction-list');
+console.log("Form element:", form);
+console.log("Transaction list:", transactionList);
 
 //3.Format Number as Indian Currency
 function formatCurrency(amount) {
@@ -18,6 +27,10 @@ function formatCurrency(amount) {
         style: 'currency',
         currency: 'INR',
     }).format(amount);
+}
+
+function saveTransactions(){
+    localStorage.setItem('transactions',JSON.stringify(transactions));
 }
 
 //4.update summary
@@ -124,6 +137,8 @@ form.addEventListener("submit", function(event) {
 
     transactions.push(transaction);
 
+    
+    saveTransactions();
     updateSummary();
     displayTransactions();
 
@@ -139,6 +154,7 @@ function deleteTransaction(id) {
         return transaction.id !== id;
     });
 
+    saveTransactions();
     updateSummary();
     displayTransactions();
 
@@ -146,6 +162,7 @@ function deleteTransaction(id) {
 
 
 // 8. Initial dashboard update
+
 updateSummary();
 displayTransactions();
 
